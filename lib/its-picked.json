@@ -1,0 +1,200 @@
+[
+  {
+    "roadsectionid": "",
+    "coordx": 127.09706,
+    "coordy": 37.40665,
+    "cctvresolution": "",
+    "filecreatetime": "",
+    "cctvtype": 4,
+    "cctvformat": "HLS",
+    "cctvname": "[수도권제1순환선] 판교분기점",
+    "cctvurl": "https://cctvsec.ktict.co.kr/1/LxZdZaq5Tz3wXUpjhzUERcLXVyGm/NlYRF3pgbV4c8YjhUsLjRpuAlmI2S32Xry503r4FV+VkVTw8wE/eurkCg=="
+  },
+  {
+    "roadsectionid": "",
+    "coordx": 127.12361,
+    "coordy": 37.42889,
+    "cctvresolution": "",
+    "filecreatetime": "",
+    "cctvtype": 4,
+    "cctvformat": "HLS",
+    "cctvname": "[수도권제1순환선] 성남",
+    "cctvurl": "https://cctvsec.ktict.co.kr/2/kVGOeJuU3i4a+Ytvmm1SJjcu90U4Ahk1gJVyVlGjZimdA4zvIb+FrcaPrvdAwfURGAvf0MoeSbhMyqDAhT2TMA=="
+  },
+  {
+    "roadsectionid": "",
+    "coordx": 127.12262,
+    "coordy": 37.43909,
+    "cctvresolution": "",
+    "filecreatetime": "",
+    "cctvtype": 4,
+    "cctvformat": "HLS",
+    "cctvname": "[수도권제1순환선] 성남요금소",
+    "cctvurl": "https://cctvsec.ktict.co.kr/3/4CvneaIIzLIBeZm0m1OokpKQZzZKcVKcXuqBYbszTWopKUoBu0Gl1JAy0UOA53SIYvGuKGmqZHWz7j5OJKKXmg=="
+  },
+  {
+    "roadsectionid": "",
+    "coordx": 127.12944,
+    "coordy": 37.475,
+    "cctvresolution": "",
+    "filecreatetime": "",
+    "cctvtype": 4,
+    "cctvformat": "HLS",
+    "cctvname": "[수도권제1순환선] 송파",
+    "cctvurl": "https://cctvsec.ktict.co.kr/4/305ABUIEozUEmqgRw0u24JnzPPVoEp1v9ymHWnZ5vwtXvOFUvm//liNeazPnOqCuOftSvnby5lqqcqR65djWog=="
+  },
+  {
+    "roadsectionid": "",
+    "coordx": 127.14972,
+    "coordy": 37.51167,
+    "cctvresolution": "",
+    "filecreatetime": "",
+    "cctvtype": 4,
+    "cctvformat": "HLS",
+    "cctvname": "[수도권제1순환선] 서하남2",
+    "cctvurl": "https://cctvsec.ktict.co.kr/5/EWTtl0WhJBjxebqmz9o5xsNnhwNC5qZNn5aUEuCS+U3KyDkXDoRTTXRt/CHfbHd7mdULGFz8rC4t7AXksUluPg=="
+  },
+  {
+    "roadsectionid": "",
+    "coordx": 127.173364,
+    "coordy": 37.516332,
+    "cctvresolution": "",
+    "filecreatetime": "",
+    "cctvtype": 4,
+    "cctvformat": "HLS",
+    "cctvname": "[수도권제1순환선] 광암터널2",
+    "cctvurl": "https://cctvsec.ktict.co.kr/6/xJ5HJVtfx4ACW7MxpUtpJ7G1TdXoy92Cqvrbx2NlxpeM4pV2XkGlr7OrgLxi+wmIu66AJ4UTyA8b0kUZdjF5Yg=="
+  },
+  {
+    "roadsectionid": "",
+    "coordx": 127.1866667,
+    "coordy": 37.51916667,
+    "cctvresolution": "",
+    "filecreatetime": "",
+    "cctvtype": 4,
+    "cctvformat": "HLS",
+    "cctvname": "[수도권제1순환선] 광암터널3",
+    "cctvurl": "https://cctvsec.ktict.co.kr/7/HhtpZSLXG6Rf00L/yiYedrXMjzF0NzAmeZXUa4KMcE58K/mci2cx6+bdMAzPKwdrR6gufWLNQgJJ22XQUhgkUg=="
+  },
+  {
+    "roadsectionid": "",
+    "coordx": 127.19361,
+    "coordy": 37.5325,
+    "cctvresolution": "",
+    "filecreatetime": "",
+    "cctvtype": 4,
+    "cctvformat": "HLS",
+    "cctvname": "[수도권제1순환선] 하남분기점",
+    "cctvurl": "https://cctvsec.ktict.co.kr/8/bZ6fWikAGjnfAd/uUONJHMx3W1wF0T0rut5OKZ5p5WG36kryvvwNWI00r8tuAMCdU0QLLsGACfgFG0Ma7W53Dw=="
+  },
+  {
+    "roadsectionid": "",
+    "coordx": 127.181422,
+    "coordy": 37.5457231,
+    "cctvresolution": "",
+    "filecreatetime": "",
+    "cctvtype": 4,
+    "cctvformat": "HLS",
+    "cctvname": "[수도권제1순환선] 상일",
+    "cctvurl": "https://cctvsec.ktict.co.kr/9/hRTHZ32ipTvYtQU5ZUsm7qahWJtOd60+lR4lXU07xISRGgdjTLO4CmUD3lsVeJOuq9/CBo4bIjm0ROlMik6exg=="
+  },
+  {
+    "roadsectionid": "",
+    "coordx": 127.1655556,
+    "coordy": 37.57333333,
+    "cctvresolution": "",
+    "filecreatetime": "",
+    "cctvtype": 4,
+    "cctvformat": "HLS",
+    "cctvname": "[수도권제1순환선] 강일",
+    "cctvurl": "https://cctvsec.ktict.co.kr/10/WtFHYkviBt7Z4W4SvnBFldOCAIRdrep5tmoBX5A48UyoiUoWugoZ9TXKISi+ADi1HsO5Z31xLASzMJr9pcGw58YOSYjThE9yHSmH3X/HKHs="
+  },
+  {
+    "roadsectionid": "",
+    "coordx": 127.156631,
+    "coordy": 37.58428,
+    "cctvresolution": "",
+    "filecreatetime": "",
+    "cctvtype": 4,
+    "cctvformat": "HLS",
+    "cctvname": "[수도권제1순환선] 토평",
+    "cctvurl": "https://cctvsec.ktict.co.kr/11/9ulIages62UbRjbJFKYNlEH8fqCH8P0kspOx5LljU6mUbtUxVW4uIkp07RLo6gyUdvcr+1he+AGvnmRnFgDp5dPPyMPb114blkXGI0bpXXw="
+  },
+  {
+    "roadsectionid": "",
+    "coordx": 127.1536111,
+    "coordy": 37.60222222,
+    "cctvresolution": "",
+    "filecreatetime": "",
+    "cctvtype": 4,
+    "cctvformat": "HLS",
+    "cctvname": "[수도권제1순환선] 남양주",
+    "cctvurl": "https://cctvsec.ktict.co.kr/12/Ui0hl4wf1pjxjrbKLrFyFi27pm9betUsCMZtQRAWiPP1eoj3Pe2PUAVfJkU8Ygla23QMzrNIaukV6zqlU7rmaf1oZG9cO5iNwhDbu9KqCzY="
+  },
+  {
+    "roadsectionid": "",
+    "coordx": 126.99123,
+    "coordy": 37.38482,
+    "cctvresolution": "",
+    "filecreatetime": "",
+    "cctvtype": 4,
+    "cctvformat": "HLS",
+    "cctvname": "[수도권제1순환선] 학의분기점",
+    "cctvurl": "https://cctvsec.ktict.co.kr/13/awQerAujTtRziKFeDt6zME63wOavqn7/Cli0kRM+h7zEzL67ewfAUoIHtDeoFd8qm/Yl2yGAEF6Cd2iyI/AXxuKLebpKjdK1g5k4ND9yXtw="
+  },
+  {
+    "roadsectionid": "",
+    "coordx": 127.02722,
+    "coordy": 37.39333,
+    "cctvresolution": "",
+    "filecreatetime": "",
+    "cctvtype": 4,
+    "cctvformat": "HLS",
+    "cctvname": "[수도권제1순환선] 청계요금소",
+    "cctvurl": "https://cctvsec.ktict.co.kr/14/1KJ7EKm+j1yEEkq2zoBMcoLSRowI5O0G26cWCpYfIW7q3yfjPDm03yO08dQw/IbsRlf4UXBhEvkkfEhx7mFNOQ6HX/hS8DQCTQ7YynJnCHA="
+  },
+  {
+    "roadsectionid": "",
+    "coordx": 127.062568,
+    "coordy": 37.395054,
+    "cctvresolution": "",
+    "filecreatetime": "",
+    "cctvtype": 4,
+    "cctvformat": "HLS",
+    "cctvname": "[수도권제1순환선] 청계운중교",
+    "cctvurl": "https://cctvsec.ktict.co.kr/15/z3Tn+53BBclXzMAx8wUxdXu1eiQ7/sPVVh6x57G3Bqz2n/xEN6JflzvN4gciXTsPtmL3+l3taw7tzuzUCNormiNnglEG1C7bEbZWR57OD54="
+  },
+  {
+    "roadsectionid": "",
+    "coordx": 127.13361,
+    "coordy": 37.63944,
+    "cctvresolution": "",
+    "filecreatetime": "",
+    "cctvtype": 4,
+    "cctvformat": "HLS",
+    "cctvname": "[수도권제1순환선] 퇴계원",
+    "cctvurl": "https://cctvsec.ktict.co.kr/16/SgWRIaBERdiQNhnAEjT3H8CFEASdegIxnDuO8qy7nrVu5QcSRuYWToRvjfp4o6Y/pWTTSknuT4Gt0MqmxSCPMEB275DMjd72onMgzfKvclY="
+  },
+  {
+    "roadsectionid": "",
+    "coordx": 127.1412691,
+    "coordy": 37.61559764,
+    "cctvresolution": "",
+    "filecreatetime": "",
+    "cctvtype": 4,
+    "cctvformat": "HLS",
+    "cctvname": "[수도권제1순환선] 구리",
+    "cctvurl": "https://cctvsec.ktict.co.kr/17/Yd8UuzHMYX6GRKF+IrxEcJZuuIP0timo7HCoW9lrLRhCpTgGtJBeoqbK9QZgC6qCLoPyCUelQKO5rySHSCxqI3UKWZW6G9fClGYjtFC4hhM="
+  },
+  {
+    "roadsectionid": "",
+    "coordx": 127.2372552,
+    "coordy": 37.49375532,
+    "cctvresolution": "",
+    "filecreatetime": "",
+    "cctvtype": 4,
+    "cctvformat": "HLS",
+    "cctvname": "[중부선] 상산곡교",
+    "cctvurl": "https://cctvsec.ktict.co.kr/18/+N9LrE+t696PjCw2TJ0XDAiORVY1P67C9VSeARYxgjO7tCTyaEbzVAle1HCI6SxgmL8nvjQv8edhjy61/x3q7Rr32XhzPxK1y4g/ul7q9+o="
+  }
+]
