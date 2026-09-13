@@ -239,6 +239,7 @@ export function CctvHub() {
   const [selectedIds, setSelectedIds] = useState<string[]>([DEFAULT_CAMERA_ID]);
   const [focusIndex, setFocusIndex] = useState(0);
   const [highways, setHighways] = useState<Camera[]>([]);
+  const [cities, setCities] = useState<Camera[]>([]);
 
   useEffect(() => {
     if (group !== 'highway') return;
@@ -256,11 +257,28 @@ export function CctvHub() {
     };
   }, [group]);
 
+  useEffect(() => {
+    if (group !== 'city' && group !== 'seoul') return;
+    let cancelled = false;
+    void fetch('/api/topis')
+      .then((res) => res.json() as Promise<{ cameras?: Camera[] }>)
+      .then((payload) => {
+        if (!cancelled) setCities(payload.cameras ?? []);
+      })
+      .catch(() => {
+        if (!cancelled) setCities([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [group]);
+
   const cameras = useMemo(() => {
     if (group === 'highway') return [...CAMERAS, ...highways];
+    if (group === 'city' || group === 'seoul') return [...CAMERAS, ...cities];
     if (group === 'safety') return [...CAMERAS, ...FLOOD_CAMERAS];
     return CAMERAS;
-  }, [group, highways]);
+  }, [cities, group, highways]);
 
   const filtered = useMemo(() => {
     const needle = query.trim();
