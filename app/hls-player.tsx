@@ -26,6 +26,9 @@ export function HlsPlayer({
 
     let cancelled = false;
     let hls: Hls | null = null;
+    let recoverTimer: number | undefined;
+    let stallTimer: number | undefined;
+    let fatalTries = 0;
     setState('loading');
 
     const fail = () => {
@@ -39,22 +42,58 @@ export function HlsPlayer({
         if (video.readyState >= 2) ok();
       });
     };
+    const later = (fn: () => void, ms: number) => {
+      window.clearTimeout(recoverTimer);
+      recoverTimer = window.setTimeout(fn, ms);
+    };
 
     video.muted = true;
     video.addEventListener('playing', ok);
     video.addEventListener('error', fail);
+    const onWaiting = () => {
+      window.clearTimeout(stallTimer);
+      stallTimer = window.setTimeout(() => {
+        if (!cancelled && !video.ended) play();
+      }, 1200);
+    };
+    video.addEventListener('waiting', onWaiting);
 
     if (Hls.isSupported()) {
       hls = new Hls({
         enableWorker: false,
-        maxBufferLength: compact ? 4 : 8,
-        maxMaxBufferLength: compact ? 8 : 12,
+        lowLatencyMode: false,
+        liveSyncDurationCount: 3,
+        liveMaxLatencyDurationCount: 8,
+        maxBufferLength: compact ? 8 : 12,
+        maxMaxBufferLength: compact ? 16 : 24,
+        manifestLoadingTimeOut: 8000,
+        levelLoadingTimeOut: 8000,
+        fragLoadingTimeOut: 8000,
       });
       hls.loadSource(src);
       hls.attachMedia(video);
       hls.on(Hls.Events.MANIFEST_PARSED, play);
       hls.on(Hls.Events.ERROR, (_event, data) => {
-        if (data.fatal) fail();
+        if (cancelled || !hls) return;
+        if (!data.fatal) {
+          if (data.details === Hls.ErrorDetails.BUFFER_STALLED_ERROR) play();
+          return;
+        }
+        fatalTries += 1;
+        if (data.type === Hls.ErrorTypes.NETWORK_ERROR && fatalTries < 4) {
+          later(() => hls?.startLoad(), 800 * fatalTries);
+          return;
+        }
+        if (data.type === Hls.ErrorTypes.MEDIA_ERROR && fatalTries < 4) {
+          hls.recoverMediaError();
+          later(play, 400);
+          return;
+        }
+        if (fatalTries < 6) {
+          later(() => setRetry((value) => value + 1), 1500);
+          return;
+        }
+        fail();
       });
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = src;
@@ -63,10 +102,19 @@ export function HlsPlayer({
       fail();
     }
 
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') play();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+
     return () => {
       cancelled = true;
+      window.clearTimeout(recoverTimer);
+      window.clearTimeout(stallTimer);
+      document.removeEventListener('visibilitychange', onVisible);
       video.removeEventListener('playing', ok);
       video.removeEventListener('error', fail);
+      video.removeEventListener('waiting', onWaiting);
       hls?.destroy();
       video.removeAttribute('src');
       video.load();
@@ -108,4 +156,3 @@ export function HlsPlayer({
     </div>
   );
 }
-
