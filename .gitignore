@@ -15,6 +15,7 @@
 /.next/
 /.vinext/
 /out/
+/.vite/
 
 # misc
 .DS_Store
