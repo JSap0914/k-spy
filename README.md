@@ -1,0 +1,22 @@
+# haneye
+
+한눈으로 공개된 한국 실시간 CCTV를 본다.
+
+국립공원, 한라산, 서울 교통, 고속도로, 하천 수위 감시처럼 **이미 공개된 실시간 영상**만 한 화면에 붙인다. 골목 방범 CCTV는 넣지 않는다.
+
+## 실행
+
+```bash
+npm install
+npm run dev
+```
+
+[http://localhost:3000](http://localhost:3000)
+
+고속도로 탭을 쓰려면 `ITS_API_KEY`를 `.env.local`에 넣는다. 키는 [ITS 국가교통정보센터](https://www.its.go.kr/opendata/opendataList?service=cctv)에서 발급한다.
+
+## 화면
+
+- 1 / 2 / 4: 고른 카메라만 병렬 재생
+- 전체: 지금 필터된 LIVE를 한 페이지에 전부 켠다
+
