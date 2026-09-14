@@ -46,7 +46,6 @@ const GROUPS: Array<CameraGroup | 'all'> = [
 ];
 
 type ViewCount = 1 | 2 | 4 | 'wall';
-const WALL_LIMIT = 12;
 
 function liveCameras(pool: Camera[]) {
   return pool.filter((camera) => camera.playMode === 'hls');
@@ -298,16 +297,16 @@ export function CctvHub() {
   }, [cameras, group, query]);
 
   const live = useMemo(() => liveCameras(filtered), [filtered]);
-  const wallCount = Math.min(Math.max(live.length, 1), WALL_LIMIT);
+  const wallCount = Math.max(live.length, 1);
   const slotCount = viewCount === 'wall' ? wallCount : viewCount;
   const displayIds = useMemo(() => {
     if (viewCount === 'wall') {
-      return fillSlots(selectedIds, wallCount, filtered);
+      return live.map((camera) => camera.id);
     }
     const next = selectedIds.slice(0, slotCount);
     while (next.length < slotCount) next.push('');
     return next;
-  }, [filtered, selectedIds, slotCount, viewCount, wallCount]);
+  }, [live, selectedIds, slotCount, viewCount]);
   const focusedId =
     displayIds[Math.min(focusIndex, Math.max(slotCount - 1, 0))] ||
     displayIds.find(Boolean) ||
@@ -350,8 +349,8 @@ export function CctvHub() {
 
   function changeView(next: ViewCount) {
     setViewCount(next);
-    const count = next === 'wall' ? Math.min(Math.max(live.length, 1), WALL_LIMIT) : next;
-    setSelectedIds((ids) => fillSlots(ids, count, filtered));
+    const count = next === 'wall' ? Math.max(live.length, 1) : next;
+    setSelectedIds(next === 'wall' ? live.map((camera) => camera.id) : fillSlots(selectedIds, count, filtered));
     setFocusIndex((index) => Math.min(index, count - 1));
   }
 
