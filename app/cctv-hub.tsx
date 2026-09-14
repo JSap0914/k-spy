@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Columns2, ExternalLink, Grid2x2, Radio, Search, Square, X } from 'lucide-react';
+import { Columns2, ExternalLink, Grid2x2, LayoutGrid, Radio, Search, Square, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -45,13 +45,20 @@ const GROUPS: Array<CameraGroup | 'all'> = [
   'safety',
 ];
 
-type ViewCount = 1 | 2 | 4;
+type ViewCount = 1 | 2 | 4 | 'wall';
+const WALL_LIMIT = 12;
+
+function liveCameras(pool: Camera[]) {
+  return pool.filter((camera) => camera.playMode === 'hls');
+}
 
 function fillSlots(ids: string[], count: number, pool: Camera[]): string[] {
   const next: string[] = [];
+  const source = liveCameras(pool);
+  const haystack = source.length > 0 ? source : pool;
   for (const id of ids) {
     if (next.length >= count) break;
-    if (pool.some((camera) => camera.id === id) && !next.includes(id)) next.push(id);
+    if (haystack.some((camera) => camera.id === id) && !next.includes(id)) next.push(id);
   }
   for (const camera of pool) {
     if (next.length >= count) break;
@@ -290,21 +297,28 @@ export function CctvHub() {
     });
   }, [cameras, group, query]);
 
+  const live = useMemo(() => liveCameras(filtered), [filtered]);
+  const wallCount = Math.min(Math.max(live.length, 1), WALL_LIMIT);
+  const slotCount = viewCount === 'wall' ? wallCount : viewCount;
   const displayIds = useMemo(() => {
-    const next = selectedIds.slice(0, viewCount);
-    while (next.length < viewCount) next.push('');
+    if (viewCount === 'wall') {
+      return fillSlots(selectedIds, wallCount, filtered);
+    }
+    const next = selectedIds.slice(0, slotCount);
+    while (next.length < slotCount) next.push('');
     return next;
-  }, [selectedIds, viewCount]);
+  }, [filtered, selectedIds, slotCount, viewCount, wallCount]);
   const focusedId =
-    displayIds[Math.min(focusIndex, viewCount - 1)] ||
+    displayIds[Math.min(focusIndex, Math.max(slotCount - 1, 0))] ||
     displayIds.find(Boolean) ||
+    live[0]?.id ||
     null;
   const selected =
     filtered.find((camera) => camera.id === focusedId) ??
-    filtered.find((camera) => camera.playMode === 'hls') ??
+    live[0] ??
     filtered[0] ??
     null;
-  const liveCount = filtered.filter((camera) => camera.playMode === 'hls').length;
+  const liveCount = live.length;
   const mapCameras = useMemo(() => {
     if (filtered.length <= 28) return filtered;
     const pinned = new Set(displayIds.filter(Boolean));
@@ -330,14 +344,15 @@ export function CctvHub() {
       return;
     }
     const next = [...displayIds];
-    next[Math.min(focusIndex, viewCount - 1)] = camera.id;
-    setSelectedIds(next.slice(0, viewCount));
+    next[Math.min(focusIndex, slotCount - 1)] = camera.id;
+    setSelectedIds(next.slice(0, slotCount));
   }
 
   function changeView(next: ViewCount) {
     setViewCount(next);
-    setSelectedIds((ids) => fillSlots(ids, next, filtered));
-    setFocusIndex((index) => Math.min(index, next - 1));
+    const count = next === 'wall' ? Math.min(Math.max(live.length, 1), WALL_LIMIT) : next;
+    setSelectedIds((ids) => fillSlots(ids, count, filtered));
+    setFocusIndex((index) => Math.min(index, count - 1));
   }
 
   function closeSlot(index: number) {
@@ -360,7 +375,12 @@ export function CctvHub() {
           <ToggleGroup
             value={[String(viewCount)]}
             onValueChange={(values) => {
-              const next = Number(values[0]);
+              const raw = values[0];
+              if (raw === 'wall') {
+                changeView('wall');
+                return;
+              }
+              const next = Number(raw);
               if (next === 1 || next === 2 || next === 4) changeView(next);
             }}
             variant="outline"
@@ -379,6 +399,10 @@ export function CctvHub() {
             <ToggleGroupItem value="4" aria-label="4화면">
               <Grid2x2 />
               4
+            </ToggleGroupItem>
+            <ToggleGroupItem value="wall" aria-label="전체 병렬">
+              <LayoutGrid />
+              전체
             </ToggleGroupItem>
           </ToggleGroup>
           <Badge variant="outline" className="rounded-md">
@@ -412,7 +436,10 @@ export function CctvHub() {
               value={[group]}
               onValueChange={(values) => {
                 const next = values[0] as CameraGroup | 'all' | undefined;
-                if (next) setGroup(next);
+                if (!next) return;
+                setGroup(next);
+                setSelectedIds([]);
+                setFocusIndex(0);
               }}
               variant="outline"
               size="sm"
@@ -464,11 +491,15 @@ export function CctvHub() {
         ) : (
           <section
             className={cn(
-              'order-1 grid min-h-[48vh] gap-px bg-border lg:order-none lg:min-h-0',
-              viewCount === 4 ? 'grid-cols-2 grid-rows-2' : 'grid-cols-1 md:grid-cols-2',
+              'order-1 grid min-h-[48vh] gap-px overflow-auto bg-border lg:order-none lg:min-h-0',
+              viewCount === 'wall'
+                ? 'grid-cols-2 auto-rows-[minmax(180px,28vh)] md:grid-cols-3 xl:grid-cols-4'
+                : viewCount === 4
+                  ? 'grid-cols-2 grid-rows-2'
+                  : 'grid-cols-1 md:grid-cols-2',
             )}
           >
-            {Array.from({ length: viewCount }, (_, index) => {
+            {Array.from({ length: slotCount }, (_, index) => {
               const camera = filtered.find((item) => item.id === displayIds[index]) ?? null;
               return (
                 <PlayerPanel
@@ -477,7 +508,7 @@ export function CctvHub() {
                   compact
                   active={index === focusIndex}
                   onFocus={() => setFocusIndex(index)}
-                  onClose={camera ? () => closeSlot(index) : undefined}
+                  onClose={viewCount === 'wall' ? undefined : camera ? () => closeSlot(index) : undefined}
                 />
               );
             })}
