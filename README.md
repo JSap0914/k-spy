@@ -13,7 +13,7 @@ npm run dev
 
 [http://localhost:3000](http://localhost:3000)
 
-고속도로 탭을 쓰려면 `ITS_API_KEY`를 `.env.local`에 넣는다. 키는 [ITS 국가교통정보센터](https://www.its.go.kr/opendata/opendataList?service=cctv)에서 발급한다.
+자세한 순서는 [SETUP.md](SETUP.md)에 있다. 고속도로 탭은 `ITS_API_KEY`가 필요하다.
 
 ## 화면
 
