@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { Columns2, ExternalLink, Grid2x2, LayoutGrid, Radio, Search, Square, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -451,6 +452,11 @@ export function CctvHub() {
                 </ToggleGroupItem>
               ))}
             </ToggleGroup>
+          </div>
+          <div className="border-y px-3 py-2">
+            <Button className="w-full" variant="outline" size="sm" render={<Link href="/resources" aria-label="방범 공개자료 열기" />}>
+              방범 위치·영상 자료·열람 안내
+            </Button>
           </div>
           <ScrollArea className="h-[28vh] min-h-0 lg:h-auto lg:flex-1">
             {filtered.length === 0 ? (
