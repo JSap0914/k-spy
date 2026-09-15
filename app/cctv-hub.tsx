@@ -28,7 +28,6 @@ import { HlsPlayer } from './hls-player';
 import { KoreaMap } from './korea-map';
 import {
   CAMERAS,
-  DEFAULT_CAMERA_ID,
   FLOOD_CAMERAS,
   GROUP_LABEL,
   type Camera,
@@ -46,7 +45,7 @@ const GROUPS: Array<CameraGroup | 'all'> = [
   'safety',
 ];
 
-type ViewCount = 1 | 2 | 4 | 'wall';
+type ViewCount = 1 | 2 | 4 | 'wall' | 'command';
 
 function liveCameras(pool: Camera[]) {
   return pool.filter((camera) => camera.playMode === 'hls');
@@ -242,14 +241,14 @@ function PlayerPanel({
 export function CctvHub() {
   const [query, setQuery] = useState('');
   const [group, setGroup] = useState<CameraGroup | 'all'>('all');
-  const [viewCount, setViewCount] = useState<ViewCount>(1);
-  const [selectedIds, setSelectedIds] = useState<string[]>([DEFAULT_CAMERA_ID]);
+  const [viewCount, setViewCount] = useState<ViewCount>('command');
+  const [selectedIds, setSelectedIds] = useState<string[]>(FLOOD_CAMERAS.slice(0, 4).map((camera) => camera.id));
   const [focusIndex, setFocusIndex] = useState(0);
   const [highways, setHighways] = useState<Camera[]>([]);
   const [cities, setCities] = useState<Camera[]>([]);
 
   useEffect(() => {
-    if (group !== 'highway') return;
+    if (group !== 'highway' && group !== 'all') return;
     let cancelled = false;
     void fetch('/api/its')
       .then((res) => res.json() as Promise<{ cameras?: Camera[] }>)
@@ -265,7 +264,7 @@ export function CctvHub() {
   }, [group]);
 
   useEffect(() => {
-    if (group !== 'city' && group !== 'seoul') return;
+    if (group !== 'city' && group !== 'seoul' && group !== 'all') return;
     let cancelled = false;
     void fetch('/api/topis')
       .then((res) => res.json() as Promise<{ cameras?: Camera[] }>)
@@ -280,17 +279,12 @@ export function CctvHub() {
     };
   }, [group]);
 
-  const cameras = useMemo(() => {
-    if (group === 'highway') return [...CAMERAS, ...highways];
-    if (group === 'city' || group === 'seoul') return [...CAMERAS, ...cities];
-    if (group === 'safety') return [...CAMERAS, ...FLOOD_CAMERAS];
-    return CAMERAS;
-  }, [cities, group, highways]);
+  const cameras = useMemo(() => [...CAMERAS, ...FLOOD_CAMERAS, ...highways, ...cities], [highways, cities]);
 
   const filtered = useMemo(() => {
     const needle = query.trim();
     return cameras.filter((camera) => {
-      const groupOk = group === 'all' || camera.group === group;
+      const groupOk = group === 'all' || camera.group === group || (group === 'seoul' && camera.region === '서울');
       if (!groupOk) return false;
       if (!needle) return true;
       return (camera.name + ' ' + camera.region + ' ' + camera.source).includes(needle);
@@ -299,15 +293,16 @@ export function CctvHub() {
 
   const live = useMemo(() => liveCameras(filtered), [filtered]);
   const wallCount = Math.max(live.length, 1);
-  const slotCount = viewCount === 'wall' ? wallCount : viewCount;
+  const slotCount = viewCount === 'wall' ? wallCount : viewCount === 'command' ? 4 : viewCount;
   const displayIds = useMemo(() => {
     if (viewCount === 'wall') {
       return live.map((camera) => camera.id);
     }
+    if (viewCount === 'command') return fillSlots(selectedIds, 4, filtered);
     const next = selectedIds.slice(0, slotCount);
     while (next.length < slotCount) next.push('');
     return next;
-  }, [live, selectedIds, slotCount, viewCount]);
+  }, [live, filtered, selectedIds, slotCount, viewCount]);
   const focusedId =
     displayIds[Math.min(focusIndex, Math.max(slotCount - 1, 0))] ||
     displayIds.find(Boolean) ||
@@ -319,17 +314,7 @@ export function CctvHub() {
     filtered[0] ??
     null;
   const liveCount = live.length;
-  const mapCameras = useMemo(() => {
-    if (filtered.length <= 28) return filtered;
-    const pinned = new Set(displayIds.filter(Boolean));
-    const keep = filtered.filter(
-      (camera) => pinned.has(camera.id) || !camera.id.startsWith('flood-'),
-    );
-    const extraFlood = filtered
-      .filter((camera) => camera.id.startsWith('flood-') && !pinned.has(camera.id))
-      .slice(0, 12);
-    return [...keep, ...extraFlood];
-  }, [displayIds, filtered]);
+  const mapCameras = live;
 
   function selectCamera(camera: Camera) {
     const existing = displayIds.indexOf(camera.id);
@@ -350,7 +335,7 @@ export function CctvHub() {
 
   function changeView(next: ViewCount) {
     setViewCount(next);
-    const count = next === 'wall' ? Math.max(live.length, 1) : next;
+    const count = next === 'wall' ? Math.max(live.length, 1) : next === 'command' ? 4 : next;
     setSelectedIds(next === 'wall' ? live.map((camera) => camera.id) : fillSlots(selectedIds, count, filtered));
     setFocusIndex((index) => Math.min(index, count - 1));
   }
@@ -376,6 +361,7 @@ export function CctvHub() {
             value={[String(viewCount)]}
             onValueChange={(values) => {
               const raw = values[0];
+              if (raw === 'command') { changeView('command'); return; }
               if (raw === 'wall') {
                 changeView('wall');
                 return;
@@ -388,6 +374,7 @@ export function CctvHub() {
             className="border border-input p-0.5"
             aria-label="한 번에 볼 화면 수"
           >
+            <ToggleGroupItem value="command" aria-label="지도 관제">관제</ToggleGroupItem>
             <ToggleGroupItem value="1" aria-label="1화면">
               <Square />
               1
@@ -414,7 +401,7 @@ export function CctvHub() {
       <div
         className={cn(
           'grid lg:h-[calc(100dvh-4.25rem)]',
-          viewCount === 1
+          (viewCount === 1 || viewCount === 'command')
             ? 'lg:grid-cols-[280px_minmax(0,1fr)_minmax(320px,400px)]'
             : 'lg:grid-cols-[280px_minmax(0,1fr)]',
         )}
@@ -424,7 +411,7 @@ export function CctvHub() {
             <div className="flex flex-wrap gap-1.5" aria-label="빠른 탐색">
               {([{ name: '전국', group: 'all' }, { name: '서울 도로', group: 'seoul' }, { name: '한라산', group: 'halla' }, { name: '하천 관제', group: 'safety' }] as const).map((preset) => (
                 <Button key={preset.name} size="sm" variant="ghost" onClick={() => {
-                  setQuery(''); setGroup(preset.group); setViewCount(1); setSelectedIds([]); setFocusIndex(0);
+                  setQuery(''); setGroup(preset.group); setViewCount('command'); setSelectedIds([]); setFocusIndex(0);
                 }}>{preset.name}</Button>
               ))}
             </div>
@@ -484,7 +471,7 @@ export function CctvHub() {
           </ScrollArea>
         </aside>
 
-        {viewCount === 1 ? (
+        {viewCount === 1 || viewCount === 'command' ? (
           <>
             <section className="relative order-3 min-h-[320px] overflow-hidden bg-card lg:order-none lg:min-h-0">
               <KoreaMap
@@ -497,7 +484,7 @@ export function CctvHub() {
               />
             </section>
             <section className="order-1 flex min-h-[42vh] flex-col bg-card lg:order-none lg:min-h-0 lg:border-l">
-              <PlayerPanel camera={selected} />
+              {viewCount === 'command' ? <div className="grid h-full grid-cols-2 gap-px overflow-auto bg-border lg:grid-cols-1">{displayIds.map((id, index) => <div className="min-h-[190px]" key={id || index}><PlayerPanel camera={filtered.find((item) => item.id === id) ?? null} compact active={index === focusIndex} onFocus={() => setFocusIndex(index)} /></div>)}</div> : <PlayerPanel camera={selected} />}
             </section>
           </>
         ) : (

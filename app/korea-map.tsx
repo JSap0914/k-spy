@@ -6,7 +6,9 @@ import type { Camera } from '@/lib/cameras';
 import 'leaflet/dist/leaflet.css';
 
 const TILE_URL =
-  'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+  'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+const KOREA_BOUNDS: LeafletNS.LatLngBoundsExpression = [[32.5, 124.3], [38.9, 132.1]];
 
 function leafletFrom(mod: unknown) {
   const typed = mod as { default?: typeof LeafletNS };
@@ -48,6 +50,8 @@ export function KoreaMap({
         center: [36.35, 127.85],
         zoom: 7,
         minZoom: 6,
+        maxBounds: KOREA_BOUNDS,
+        maxBoundsViscosity: 1,
         maxZoom: 14,
         zoomControl: false,
         attributionControl: true,
@@ -56,10 +60,12 @@ export function KoreaMap({
       L.control.zoom({ position: 'bottomleft' }).addTo(map);
       L.tileLayer(TILE_URL, {
         attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: 'abcd',
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        bounds: KOREA_BOUNDS,
+        noWrap: true,
         maxZoom: 14,
       }).addTo(map);
+      map.fitBounds(KOREA_BOUNDS, { animate: false });
       mapRef.current = map;
       setReady(true);
       const refresh = () => {
