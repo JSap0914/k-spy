@@ -364,12 +364,12 @@ export function CctvHub() {
 
   return (
     <div className="min-h-dvh bg-background text-foreground lg:h-dvh lg:overflow-hidden">
-      <header className="flex items-center justify-between gap-4 border-b px-4 py-3">
-        <div>
+      <header className="flex flex-wrap items-center justify-between gap-3 border-b px-4 py-3">
+        <div className="shrink-0">
           <p className="text-[11px] font-medium tracking-[0.18em] text-muted-foreground">
             공개 실시간
           </p>
-          <h1 className="text-balance text-[1.2rem] font-semibold tracking-tight">실시간 CCTV</h1>
+          <h1 className="text-balance text-[1.2rem] font-semibold tracking-tight">K-SPY</h1>
         </div>
         <div className="flex items-center gap-2">
           <ToggleGroup
@@ -406,7 +406,7 @@ export function CctvHub() {
             </ToggleGroupItem>
           </ToggleGroup>
           <Badge variant="outline" className="rounded-md">
-            {liveCount}곳
+            영상 {liveCount}곳
           </Badge>
         </div>
       </header>
@@ -421,6 +421,13 @@ export function CctvHub() {
       >
         <aside className="order-2 flex min-h-0 flex-col border-t bg-card lg:order-none lg:border-t-0 lg:border-r">
           <div className="space-y-3 p-3">
+            <div className="flex flex-wrap gap-1.5" aria-label="빠른 탐색">
+              {([{ name: '전국', group: 'all' }, { name: '서울 도로', group: 'seoul' }, { name: '한라산', group: 'halla' }, { name: '하천 관제', group: 'safety' }] as const).map((preset) => (
+                <Button key={preset.name} size="sm" variant="ghost" onClick={() => {
+                  setQuery(''); setGroup(preset.group); setViewCount(1); setSelectedIds([]); setFocusIndex(0);
+                }}>{preset.name}</Button>
+              ))}
+            </div>
             <div className="relative">
               <Search className="pointer-events-none absolute top-2.5 left-2.5 size-4 text-muted-foreground" />
               <Input
@@ -479,7 +486,7 @@ export function CctvHub() {
 
         {viewCount === 1 ? (
           <>
-            <section className="relative order-3 hidden min-h-[280px] overflow-hidden bg-card lg:order-none lg:block lg:min-h-0">
+            <section className="relative order-3 min-h-[320px] overflow-hidden bg-card lg:order-none lg:min-h-0">
               <KoreaMap
                 cameras={mapCameras}
                 selectedId={selected?.id ?? null}

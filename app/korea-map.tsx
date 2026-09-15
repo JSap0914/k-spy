@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type * as LeafletNS from 'leaflet';
 import type { Camera } from '@/lib/cameras';
 import 'leaflet/dist/leaflet.css';
@@ -23,6 +23,7 @@ export function KoreaMap({
   onSelect: (id: string) => void;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
+  const [ready, setReady] = useState(false);
   const mapRef = useRef<LeafletNS.Map | null>(null);
   const markersRef = useRef<Map<string, LeafletNS.CircleMarker>>(new Map());
   const onSelectRef = useRef(onSelect);
@@ -60,6 +61,7 @@ export function KoreaMap({
         maxZoom: 14,
       }).addTo(map);
       mapRef.current = map;
+      setReady(true);
       const refresh = () => {
         if (cancelled || mapRef.current !== map) return;
         const size = map.getSize();
@@ -109,6 +111,9 @@ export function KoreaMap({
           return;
         }
         const marker = L.circleMarker([camera.lat, camera.lng], style);
+        const label = document.createElement('span');
+        label.textContent = `${camera.name} · ${camera.playMode === 'hls' ? '영상' : '공식 링크'}`;
+        marker.bindTooltip(label);
         marker.on('click', () => onSelectRef.current(camera.id));
         marker.addTo(map);
         markersRef.current.set(camera.id, marker);
@@ -124,7 +129,7 @@ export function KoreaMap({
         );
       }
     });
-  }, [cameras, selectedId]);
+  }, [cameras, selectedId, ready]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -133,13 +138,26 @@ export function KoreaMap({
     if (lastSelectedRef.current === selected.id) return;
     lastSelectedRef.current = selected.id;
     map.panTo([selected.lat, selected.lng], { animate: false });
-  }, [cameras, selectedId]);
+  }, [cameras, selectedId, ready]);
 
   return (
+    <>
     <div
       ref={hostRef}
       className="absolute inset-0 bg-[#14161a]"
       aria-label="대한민국 공개 CCTV 지도"
     />
+    <div className="absolute left-3 top-3 z-[500] max-w-[calc(100%-1.5rem)] rounded-md border bg-background/95 px-3 py-2 text-xs shadow-sm">
+      <p className="font-medium">{cameras.find((camera) => camera.id === selectedId)?.name ?? '대한민국 공개 CCTV'}</p>
+      <p className="mt-1 font-mono text-muted-foreground">
+        {(() => { const camera = cameras.find((item) => item.id === selectedId); return camera ? `${camera.lat.toFixed(4)}° N  ${camera.lng.toFixed(4)}° E` : `${cameras.length}개 지점`; })()}
+      </p>
+      <button type="button" className="mt-2 underline underline-offset-4" onClick={() => {
+        const map = mapRef.current;
+        if (!map || cameras.length === 0) return;
+        map.fitBounds(cameras.map((camera) => [camera.lat, camera.lng]), { padding: [40, 40], maxZoom: 10, animate: false });
+      }}>전체 지점 보기</button>
+    </div>
+    </>
   );
 }
