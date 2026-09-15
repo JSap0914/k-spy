@@ -41,16 +41,6 @@ export const PUBLIC_RESOURCES: {
     access: '공개 지도 · 생활안전지도 메뉴 선택',
   },
   {
-    id: 'aihub-park-video',
-    name: '공원 주요시설·불법행위 감시 CCTV 영상 자료',
-    source: 'AI Hub',
-    region: '부산 등 공원',
-    kind: '영상 자료',
-    url: 'https://aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=realm&dataSetSn=477',
-    description: '2021년 구축한 비식별화 학습용 MP4·이미지 자료입니다. 공원에서 연출한 데이터이며 실제 골목의 현재 상황이나 사건 녹화본이 아닙니다. 소개·샘플·교육 영상과 파일 목록을 제공합니다.',
-    access: '소개 공개 · 원본은 제공처 신청·이용 조건 확인',
-  },
-  {
     id: 'yeoncheon-access',
     name: '방범 CCTV 개인영상정보 열람 절차',
     source: '연천군청',

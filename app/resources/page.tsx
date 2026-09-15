@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { PUBLIC_RESOURCES, type ResourceKind } from '@/lib/public-resources';
+import { VideoGallery } from './video-gallery';
 
 const KINDS: Array<ResourceKind | '전체'> = ['전체', '위치 지도', '설치 데이터', '영상 자료', '열람 안내'];
 
@@ -27,10 +28,11 @@ export default function ResourcesPage() {
           <h1 className="text-2xl font-semibold">방범·공개자료</h1>
           <p className="text-sm leading-6 text-muted-foreground">
             골목 방범 위치부터 공개 영상 자료, 열람 신청까지 모았습니다.
-            각 항목은 공식 제공처에서 열립니다. 위치·신청 안내는 영상 재생과 구분합니다.
+            위쪽에서 영상을 재생하고, 아래에서 위치·자료·신청 안내를 찾으세요.
           </p>
         </div>
       </header>
+      <VideoGallery />
       <section className="space-y-3" aria-label="공개자료 검색">
         <Input aria-label="공개자료 검색" placeholder="지역, 기관, 자료 검색" value={query} onChange={(event) => setQuery(event.target.value)} />
         <fieldset className="flex flex-wrap gap-2" aria-label="자료 종류">
