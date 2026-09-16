@@ -1,6 +1,6 @@
 # K-SPY — 한국을 켜다.
 
-![K-SPY 실제 실행 화면 — 전국 공개 CCTV를 한 화면에서](public/readme/k-spy-live-wall.png)
+![K-SPY 실제 실행 화면 — 서울의 빌딩과 도로, 교차로 CCTV를 한 화면에서](public/readme/k-spy-city-wall.png)
 
 <p align="center"><strong>이 화면, 전부 실제 CCTV.</strong><br/>탭을 수십 개 열 필요 없이. 한국을 한 화면에.</p>
 
