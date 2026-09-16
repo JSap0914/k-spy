@@ -1,8 +1,10 @@
 # K-SPY — 한국을 켜다.
 
-![K-SPY 실제 실행 화면 — 서울의 빌딩과 도로, 교차로 CCTV를 한 화면에서](public/readme/k-spy-city-wall.png)
+![K-SPY — 한국을 한눈에. 실제 도심 CCTV 캡처를 바탕으로 편집한 홍보 이미지](public/readme/k-spy-city-hero.png)
 
-<p align="center"><strong>이 화면, 전부 실제 CCTV.</strong><br/>탭을 수십 개 열 필요 없이. 한국을 한 화면에.</p>
+<p align="center"><strong>도시가 움직이는 순간을 한눈에.</strong><br/>탭을 수십 개 열 필요 없이. 한국을 한 화면에.</p>
+
+<p align="center">실제 CCTV 캡처 기반 AI 편집 이미지 · <a href="public/readme/k-spy-city-wall.png">원본 실행 화면</a></p>
 
 <details>
 <summary><strong>193개 카메라를 펼친 전체 캡처 보기</strong></summary>
