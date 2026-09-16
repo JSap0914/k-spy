@@ -1,6 +1,17 @@
 # K-SPY — 한국을 켜다.
 
-![K-SPY — 한국을 켜다. 브라우저 하나. 전국의 공개 CCTV.](public/readme/k-spy-banner.svg)
+![K-SPY 실제 실행 화면 — 전국 공개 CCTV를 한 화면에서](public/readme/k-spy-live-wall.png)
+
+<p align="center"><strong>이 화면, 전부 실제 CCTV.</strong><br/>탭을 수십 개 열 필요 없이. 한국을 한 화면에.</p>
+
+<details>
+<summary><strong>193개 카메라를 펼친 전체 캡처 보기</strong></summary>
+
+![K-SPY 전체 병렬 모드의 카메라 193개](public/readme/k-spy-all-cameras.jpg)
+
+2026-09-16 실제 실행 화면. 전체 배치를 담기 위해 캡처할 때만 8열로 펼쳤다. 연결 대기·제공처 점검 화면도 그대로 포함한다.
+
+</details>
 
 <p align="center"><strong>브라우저 하나. 전국의 공개 CCTV.</strong><br/>도시의 도로부터 한라산, 강을 건너는 다리까지.</p>
 
@@ -46,4 +57,4 @@ npm run dev
 
 ---
 
-관제 탐색 방식 참고: [God’s Eye View](https://github.com/bilawalsidhu/gods-eye-view). 상단 이미지는 브랜드 그래픽이다.
+관제 탐색 방식 참고: [God’s Eye View](https://github.com/bilawalsidhu/gods-eye-view).
