@@ -8,11 +8,29 @@ type ItsRow = {
 };
 
 const BOXES = [
-  { minX: 126.7, maxX: 127.45, minY: 37.2, maxY: 37.75 },
-  { minX: 128.7, maxX: 129.3, minY: 35.0, maxY: 35.35 },
-  { minX: 126.7, maxX: 127.2, minY: 35.0, maxY: 35.3 },
-  { minX: 128.4, maxX: 129.1, minY: 35.75, maxY: 36.1 },
+  { minX: 124.6, maxX: 127.0, minY: 33.0, maxY: 35.5 },
+  { minX: 127.0, maxX: 129.6, minY: 33.0, maxY: 35.5 },
+  { minX: 124.6, maxX: 127.0, minY: 35.5, maxY: 37.5 },
+  { minX: 127.0, maxX: 129.6, minY: 35.5, maxY: 37.5 },
+  { minX: 124.6, maxX: 127.0, minY: 37.5, maxY: 38.7 },
+  { minX: 127.0, maxX: 129.6, minY: 37.5, maxY: 38.7 },
 ];
+
+const CACHE_MS = 5 * 60 * 1000;
+let cache: { at: number; cameras: ItsCamera[] } | null = null;
+
+type ItsCamera = {
+  id: string;
+  name: string;
+  region: string;
+  group: "highway";
+  source: string;
+  playMode: "hls";
+  url: string;
+  pageUrl: string;
+  lat: number;
+  lng: number;
+};
 
 function toHttps(url: string) {
   return url.replace(/^http:\/\//i, "https://");
@@ -41,9 +59,16 @@ async function fetchBox(box: (typeof BOXES)[number]) {
 
 export async function GET() {
   try {
+    if (cache && Date.now() - cache.at < CACHE_MS) {
+      return Response.json(
+        { cameras: cache.cameras },
+        { headers: { "Cache-Control": "public, max-age=60" } },
+      );
+    }
+
     const rows = (await Promise.all(BOXES.map(fetchBox))).flat();
     const seen = new Set<string>();
-    const cameras = [];
+    const cameras: ItsCamera[] = [];
     for (const row of rows) {
       if (!row.cctvurl || row.coordx == null || row.coordy == null) continue;
       const name = (row.cctvname ?? "고속도로")
@@ -69,11 +94,12 @@ export async function GET() {
         lat: row.coordy,
         lng: row.coordx,
       });
-      if (cameras.length >= 48) break;
     }
+
+    cache = { at: Date.now(), cameras };
     return Response.json(
       { cameras },
-      { headers: { "Cache-Control": "public, max-age=45" } },
+      { headers: { "Cache-Control": "public, max-age=60" } },
     );
   } catch {
     return Response.json({ cameras: [] }, { status: 200 });

@@ -25,6 +25,23 @@ const HEADERS = {
   "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
 };
 
+let cache: { at: number; cameras: TopisCamera[] } | null = null;
+const CACHE_MS = 5 * 60 * 1000;
+const INFO_CONCURRENCY = 24;
+
+type TopisCamera = {
+  id: string;
+  name: string;
+  region: string;
+  group: "city";
+  source: string;
+  playMode: "hls";
+  url: string;
+  pageUrl: string;
+  lat: number;
+  lng: number;
+};
+
 function pickHls(row: InfoRow) {
   const urls = [row.hlsUrl, row.remark5].filter(Boolean) as string[];
   return urls.find((url) => url.includes(".m3u8")) ?? null;
@@ -60,8 +77,15 @@ async function fetchInfo(camId: string) {
 
 export async function GET() {
   try {
+    if (cache && Date.now() - cache.at < CACHE_MS) {
+      return Response.json(
+        { cameras: cache.cameras },
+        { headers: { "Cache-Control": "public, max-age=60" } },
+      );
+    }
+
     const first = await fetchList(1);
-    const pages = Math.min(first.lastPage, 5);
+    const pages = first.lastPage;
     const listed: ListRow[] = [...first.rows];
     if (pages > 1) {
       const rest = await Promise.all(
@@ -70,20 +94,16 @@ export async function GET() {
       for (const page of rest) listed.push(...page.rows);
     }
 
-    const unique = listed.filter((row) => row.camId).slice(0, 48);
-    const infos = await Promise.all(unique.map((row) => fetchInfo(row.camId as string)));
-    const cameras: Array<{
-      id: string;
-      name: string;
-      region: string;
-      group: "city";
-      source: string;
-      playMode: "hls";
-      url: string;
-      pageUrl: string;
-      lat: number;
-      lng: number;
-    }> = [];
+    const unique = listed.filter((row) => row.camId);
+    const infos: Array<InfoRow | null> = [];
+    for (let i = 0; i < unique.length; i += INFO_CONCURRENCY) {
+      const batch = unique.slice(i, i + INFO_CONCURRENCY);
+      const part = await Promise.all(
+        batch.map((row) => fetchInfo(row.camId as string)),
+      );
+      infos.push(...part);
+    }
+    const cameras: TopisCamera[] = [];
     const seen = new Set<string>();
     unique.forEach((row, index) => {
       const info = infos[index];
@@ -105,6 +125,7 @@ export async function GET() {
         lng: info.axX,
       });
     });
+    cache = { at: Date.now(), cameras };
     return Response.json(
       { cameras },
       { headers: { "Cache-Control": "public, max-age=60" } },
