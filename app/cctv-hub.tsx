@@ -246,6 +246,7 @@ export function CctvHub() {
   const [focusIndex, setFocusIndex] = useState(0);
   const [highways, setHighways] = useState<Camera[]>([]);
   const [cities, setCities] = useState<Camera[]>([]);
+  const [gyeonggi, setGyeonggi] = useState<Camera[]>([]);
 
   useEffect(() => {
     if (group !== 'highway' && group !== 'all') return;
@@ -279,7 +280,26 @@ export function CctvHub() {
     };
   }, [group]);
 
-  const cameras = useMemo(() => [...CAMERAS, ...FLOOD_CAMERAS, ...highways, ...cities], [highways, cities]);
+  useEffect(() => {
+    if (group !== 'gyeonggi' && group !== 'all') return;
+    let cancelled = false;
+    void fetch('/api/gits')
+      .then((res) => res.json() as Promise<{ cameras?: Camera[] }>)
+      .then((payload) => {
+        if (!cancelled) setGyeonggi(payload.cameras ?? []);
+      })
+      .catch(() => {
+        if (!cancelled) setGyeonggi([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [group]);
+
+  const cameras = useMemo(
+    () => [...CAMERAS, ...FLOOD_CAMERAS, ...highways, ...cities, ...gyeonggi],
+    [highways, cities, gyeonggi],
+  );
 
   const filtered = useMemo(() => {
     const needle = query.trim();
