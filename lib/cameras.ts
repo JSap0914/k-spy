@@ -61,10 +61,9 @@ export const CAMERAS: Camera[] = [
   { id: "topis-baekbeom", name: "남산 백범광장", region: "서울", group: "seoul", source: "서울 TOPIS", playMode: "hls", pageUrl: "https://topis.seoul.go.kr/map/openCctvMap.do", url: "https://topiscctv1.eseoul.go.kr/edge6/ch77.stream/playlist.m3u8", lat: 37.55616, lng: 126.97904 },
   { id: "spatic-2", name: "서울 교차로 2", region: "서울", group: "seoul", source: "서울경찰청 교통정보센터", playMode: "hls", pageUrl: "https://topis.seoul.go.kr/map/openCctvMap.do", url: "https://strm1.spatic.go.kr/live/2.stream/playlist.m3u8", lat: 37.5665, lng: 126.978 },
   { id: "its-hub", name: "고속도로·국도 전체", region: "전국", group: "highway", source: "국가교통정보센터", playMode: "outbound", url: "https://www.its.go.kr/?mapTab=cctv", lat: 36.5, lng: 127.8, note: "지도에 올라온 고속도로는 바로 재생됩니다. 전체 카메라는 공식 사이트에서 봅니다." },
-  { id: "utic-hub", name: "도시 도로·교차로", region: "전국", group: "city", source: "도시교통정보센터", playMode: "outbound", url: "https://www.utic.go.kr/map/map.do?menu=cctv", lat: 37.48, lng: 127.03, note: "서울 공개 교통 CCTV는 이 화면에서 바로 재생됩니다. 전국 도시 도로는 UTIC 키와 IP 승인이 필요합니다." },
+  { id: "utic-hub", name: "도시 도로·교차로", region: "전국", group: "city", source: "도시교통정보센터", playMode: "outbound", url: "https://www.utic.go.kr/map/map.do?menu=cctv", lat: 37.48, lng: 127.03, note: "서울과 경기 공개 교통 CCTV는 이 화면에서 바로 재생됩니다. 도시교통정보센터 지도는 공식 사이트에서 함께 볼 수 있습니다." },
   { id: "flood-hub", name: "하천 수위 감시 전체", region: "전국", group: "safety", source: "한강홍수통제소", playMode: "outbound", url: "https://www.hrfco.go.kr/sumun/cctvRtmp.do", lat: 37.5911, lng: 127.8453, note: "공개된 하천 수위 감시 CCTV입니다. 골목 방범 카메라는 실시간 공개가 아닙니다." },
-  { id: "safemap-hub", name: "생활안전지도", region: "전국", group: "safety", source: "행정안전부", playMode: "outbound", url: "https://www.safemap.go.kr/main/smap.do", lat: 36.5, lng: 127.8, note: "시설·위험지역 위치만 공개됩니다. 골목 방범 실시간 영상은 없습니다." },
-  { id: "utic-safety-hub", name: "경찰 교통 CCTV 신청", region: "전국", group: "safety", source: "경찰청 UTIC", playMode: "outbound", url: "https://www.utic.go.kr/guide/newUtisData.do", lat: 37.56, lng: 126.98, note: "경찰청 UTIC 교통 CCTV는 키와 IP 승인 뒤에만 열립니다. 골목 방범은 공개되지 않습니다." },
+  { id: "safemap-hub", name: "생활안전지도", region: "전국", group: "safety", source: "행정안전부", playMode: "outbound", url: "https://www.safemap.go.kr/main/smap.do", lat: 36.5, lng: 127.8, note: "생활안전 시설과 지역 안전정보를 지도에서 확인합니다." },
 ];
 
 export const DEFAULT_CAMERA_ID = "knps-baegundae";
